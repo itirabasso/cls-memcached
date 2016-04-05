@@ -24,10 +24,10 @@ function slice(args) {
   return array;
 }
 
-module.exports = function patchRedis(ns) {
-  var redis = require('redis');
-  var proto = redis && redis.RedisClient && redis.RedisClient.prototype;
-  shimmer.wrap(proto, 'send_command', function (send_command) {
+module.exports = function patchMemcached(ns) {
+  var memcached = require('memcached');
+  var proto = memcached && memcached.Client && redis.Client.prototype;
+  shimmer.wrap(proto, 'command', function (command) {
     return function wrapped() {
       var args     = slice(arguments);
       var last     = args.length - 1;
@@ -42,7 +42,7 @@ module.exports = function patchRedis(ns) {
         tail[last] = ns.bind(tail[last]);
       }
 
-      return send_command.apply(this, args);
+      return command.apply(this, args);
     };
   });
 };

@@ -1,36 +1,35 @@
 {
-  "name": "cls-redis",
+  "name": "cls-memcached",
   "version": "1.0.3",
-  "description": "Make continuation-local storage play nice with node-redis.",
+  "description": "Make continuation-local storage play nice with cls-memcached.",
   "main": "shim.js",
   "scripts": {
     "test": "tap test/*.tap.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/othiym23/cls-redis.git"
+    "url": "https://github.com/itirabasso/cls-memcached.git"
   },
   "keywords": [
     "continuation-local-storage",
-    "node-redis",
-    "redis",
+    "memcached",
     "shim",
     "glue",
     "baling-wire",
     "wow"
   ],
   "author": "Forrest L Norvell <ogd@aoaioxxysz.net>",
+  "contributors": [
+    "Ignacio M. Tirabasso"
+  ],
   "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/othiym23/cls-redis/issues"
-  },
   "peerDependencies": {
     "continuation-local-storage": "^3.0.0",
-    "redis": ">=0.10.2 <1.0.0"
+    "memcached": "2.2.1"
   },
   "devDependencies": {
     "tap": "~0.4.4",
-    "redis": ">=0.10.2 <1.0.0",
+    "memcached": "2.2.1",
     "continuation-local-storage": "^3.0.0"
   },
   "dependencies": {

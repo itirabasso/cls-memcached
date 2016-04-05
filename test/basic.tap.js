@@ -2,14 +2,14 @@
 
 var test = require('tap').test;
 
-test("CLS + redis without shim = sadness", function (t) {
+test("CLS + memcached without shim = sadness", function (t) {
   t.plan(4);
 
   var cls = require('continuation-local-storage');
   var ns = cls.createNamespace('test');
 
-  var redis = require('redis');
-  var client = redis.createClient();
+  var memcached = require('memcached');
+  var client = new memcached("localhost:11211");
 
   this.tearDown(function () {
     client.end();
@@ -44,7 +44,7 @@ test("CLS + redis without shim = sadness", function (t) {
 
   ns.run(function () {
     var data = JSON.stringify({id : 1});
-    client.set(1, data, function next(error) {
+    client.set(1, data, 0, function next(error) {
       if (error) {
         t.fail(error);
         return t.end();
@@ -55,18 +55,18 @@ test("CLS + redis without shim = sadness", function (t) {
   });
 });
 
-test("CLS + redis with shim = satisfaction", function (t) {
+test("CLS + memcached with shim = satisfaction", function (t) {
   t.plan(4);
 
   var cls = require('continuation-local-storage');
   var ns = cls.createNamespace('test');
 
-  var patchRedis = require('../shim.js');
-  patchRedis(ns);
+  var patchMemcached = require('../shim.js');
+  patchMemcached(ns);
 
-  var redis = require('redis');
-  var client = redis.createClient();
-
+  var memcached = require('memcached');
+  var client = new memcached("localhost:11211");
+  
   this.tearDown(function () {
     client.end();
   });
@@ -100,7 +100,7 @@ test("CLS + redis with shim = satisfaction", function (t) {
 
   ns.run(function () {
     var data = JSON.stringify({id : 1});
-    client.set(1, data, function next(error) {
+    client.set(1, data, 0, function next(error) {
       if (error) {
         t.fail(error);
         return t.end();
