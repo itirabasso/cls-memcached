@@ -26,9 +26,10 @@ function slice(args) {
 
 module.exports = function patchMemcached(ns) {
   var memcached = require('memcached');
-  var proto = memcached && memcached.Client && redis.Client.prototype;
+  var proto = memcached.prototype;
   shimmer.wrap(proto, 'command', function (command) {
     return function wrapped() {
+      console.log("Called command");
       var args     = slice(arguments);
       var last     = args.length - 1;
       var callback = args[last];
@@ -36,13 +37,14 @@ module.exports = function patchMemcached(ns) {
 
       if (typeof callback === 'function') {
         args[last] = ns.bind(callback);
-      }
-      else if (Array.isArray(tail) && typeof tail[tail.length - 1] === 'function') {
+      } else if (Array.isArray(tail) && typeof tail[tail.length - 1] === 'function') {
         last = tail.length - 1;
         tail[last] = ns.bind(tail[last]);
       }
-
-      return command.apply(this, args);
+      var ret = command.apply(this, args);
+      console.log("Done command");
+      return ret;
     };
+
   });
 };
